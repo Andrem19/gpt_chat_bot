@@ -50,6 +50,9 @@ func Switcher(message string, chat_id string, client *firestore.Client, GPT_BOT_
 			
 			UpdateFirebase("users", id, "tokensUsed", tokens + answer.Tokens, client)
 			return answer.Message, nil
+		} else if message[0:2] == "-c" {
+			commands := Decode(message)
+			return CountPriceAndAmounts(commands)
 		} else {
 			answer, err := AskQuestion(message, GPT_BOT_TOKEN)
 			if err != nil {
