@@ -7,12 +7,12 @@ import (
 )
 
 func CountPriceAndAmounts(commands []string) (string, error) {
-	sumInvest, err := strconv.ParseFloat(commands[2], 32)
+	sumInvest, err := strconv.ParseFloat(commands[1], 32)
 
 	if err != nil {
 		return err.Error(), err
 	}
-	sumCoins, err := strconv.ParseFloat(commands[3], 32)
+	sumCoins, err := strconv.ParseFloat(commands[2], 32)
 	if err != nil {
 		return err.Error(), err
 	}
