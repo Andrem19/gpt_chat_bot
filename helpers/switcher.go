@@ -40,7 +40,7 @@ func Switcher(message string, chat_id string, client *firestore.Client, GPT_BOT_
 		}
 		tokens, ok := rawValue.(int64)
 		if !ok {
-			return "Something went wrong 3_", nil
+			return "Something went wrong 3", nil
 		}
 		if message[0:2] == "-i" {
 			answer, err := GenerateImage(message, GPT_BOT_TOKEN)
