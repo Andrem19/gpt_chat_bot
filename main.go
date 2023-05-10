@@ -26,7 +26,7 @@ import (
 		config, err = helpers.LoadConfig(".")
 	}
 	//Start with firebase
-	opt := option.WithCredentialsFile("./gptdb-5a185-firebase-adminsdk-ta4a9-6bf0706c8b.json")
+	opt := option.WithCredentialsFile("./google-credentials.json")
 	ctx := context.Background()
 	client, err := firestore.NewClient(ctx, "gptdb-5a185", opt)
 	if err != nil {
