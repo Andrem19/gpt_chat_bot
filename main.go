@@ -23,8 +23,8 @@ import (
 			GPT_BOT_TOKEN: os.Getenv("GPT_BOT_TOKEN"),
 			TELEGRAM_BOT_TOKEN: os.Getenv("TELEGRAM_BOT_TOKEN"),
 		}
-		// googleCred := os.Getenv("GOOGLE_CREDENTIALS")
-		// opt = option.WithCredentialsJSON([]byte(googleCred))
+		googleCred := os.Getenv("GOOGLE_CREDENTIALS")
+		opt = option.WithCredentialsJSON([]byte(googleCred))
 	} else {
 		config, err = helpers.LoadConfig(".")
 		opt = option.WithCredentialsFile("google-credentials.json")
@@ -33,7 +33,7 @@ import (
 
 	//Start with firebase
 	
-	opt = option.WithCredentialsFile("google-credentials.json")
+	// opt = option.WithCredentialsFile("google-credentials.json")
 	ctx := context.Background()
 	client, err := firestore.NewClient(ctx, "gptdb-5a185", opt)
 	if err != nil {
