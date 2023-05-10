@@ -28,8 +28,7 @@ import (
 	} else {
 		config, err = helpers.LoadConfig(".")
 		opt = option.WithCredentialsFile("google-credentials.json")
-	}
-	
+	}	
 
 	//Start with firebase
 	ctx := context.Background()
