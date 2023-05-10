@@ -47,7 +47,7 @@ import (
 	log.Printf("Authorized on telegram %s", bot.Self.UserName)
 	
 	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 60
+	u.Timeout = 10
 
 	updates := bot.GetUpdatesChan(u)
 
