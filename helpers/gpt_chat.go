@@ -96,7 +96,7 @@ func AskQuestion(question string, gpt_token string, clientTranslate *translate.C
 	}
 	choice := response.Choices[0]
 
-	msg, err := fromRussian(clientTranslate, choice.Text)
+	msg, err := toRussian(clientTranslate, choice.Text)
 	if err != nil {
 		log.Println(err)
 	}
