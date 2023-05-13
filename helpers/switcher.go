@@ -4,9 +4,10 @@ import (
 	"fmt"
 
 	"cloud.google.com/go/firestore"
+	"cloud.google.com/go/translate"
 )
 
-func Switcher(message string, chat_id string, client *firestore.Client, GPT_BOT_TOKEN string) (string, error) {
+func Switcher(message string, chat_id string, client *firestore.Client, config *Config, clientTranslate *translate.Client) (string, error) {
 
 	user, id, err := GetFromFirebase("users", chat_id, client)
 	if err != nil {
@@ -43,7 +44,11 @@ func Switcher(message string, chat_id string, client *firestore.Client, GPT_BOT_
 			return "Something went wrong 3", nil
 		}
 		if message[0:2] == "-i" {
-			answer, err := GenerateImage(message, GPT_BOT_TOKEN)
+			msg, err := fromRussian(clientTranslate, message[2:])
+			if err != nil {
+				return "", err
+			}
+			answer, err := GenerateImage(msg, config.GPT_BOT_TOKEN)
 			if err != nil {
 				SaveError(chat_id, message, err.Error(), client)
 			}
@@ -54,7 +59,11 @@ func Switcher(message string, chat_id string, client *firestore.Client, GPT_BOT_
 			commands := Decode(message)
 			return CountPriceAndAmounts(commands)
 		} else {
-			answer, err := AskQuestion(message, GPT_BOT_TOKEN)
+			msg, err := fromRussian(clientTranslate, message)
+			if err != nil {
+				return "", err
+			}
+			answer, err := AskQuestion(msg, config.GPT_BOT_TOKEN, clientTranslate)
 			if err != nil {
 				SaveError(chat_id, message, err.Error(), client)
 			}

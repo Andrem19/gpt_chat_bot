@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"cloud.google.com/go/translate"
 )
 
 // "time"
@@ -45,7 +47,7 @@ type TextCompletionUsage struct {
 	TotalTokens      int64 `json:"total_tokens"`
 }
 
-func AskQuestion(question string, gpt_token string) (Answer, error) {
+func AskQuestion(question string, gpt_token string, clientTranslate *translate.Client) (Answer, error) {
 
 	var err error
 
@@ -94,9 +96,13 @@ func AskQuestion(question string, gpt_token string) (Answer, error) {
 	}
 	choice := response.Choices[0]
 
+	msg, err := fromRussian(clientTranslate, choice.Text)
+	if err != nil {
+		log.Println(err)
+	}
 
 	answer := Answer{
-		Message: choice.Text,
+		Message: msg,
 		Tokens: response.Usage.TotalTokens,
 	}
 

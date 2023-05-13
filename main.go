@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"cloud.google.com/go/firestore"
+	"cloud.google.com/go/translate"
 
 	"github.com/Andrem19/gpt_chat_bot/helpers"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -22,6 +23,7 @@ import (
 		config = helpers.Config{
 			GPT_BOT_TOKEN: os.Getenv("GPT_BOT_TOKEN"),
 			TELEGRAM_BOT_TOKEN: os.Getenv("TELEGRAM_BOT_TOKEN"),
+			GOOGLE_API_KEY: os.Getenv("googleApiKey"),
 		}
 		googleCred := os.Getenv("GOOGLE_CREDENTIALS")
 		opt = option.WithCredentialsJSON([]byte(googleCred))
@@ -51,10 +53,16 @@ import (
 
 	updates := bot.GetUpdatesChan(u)
 
+	//start with google translate client
+	clientTranslate, err := translate.NewClient(ctx, option.WithAPIKey(config.GOOGLE_API_KEY))
+    if err != nil {
+        panic(err)
+    }
+
 	for update := range updates {
 		if update.Message != nil { // If we got a message
 			go func() {
-				answer, err := helpers.Switcher(update.Message.Text, strconv.FormatInt(update.Message.Chat.ID, 10), client, config.GPT_BOT_TOKEN)
+				answer, err := helpers.Switcher(update.Message.Text, strconv.FormatInt(update.Message.Chat.ID, 10), client, &config, clientTranslate)
 				if err != nil {
 					helpers.SaveError(strconv.FormatInt(update.Message.Chat.ID, 10), update.Message.Text, err.Error(), client)
 				}
