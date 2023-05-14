@@ -58,6 +58,13 @@ func Switcher(message string, chat_id string, client *firestore.Client, config *
 		} else if message[0:2] == "-c" {
 			commands := Decode(message)
 			return CountPriceAndAmounts(commands)
+		} else if message[0:2] == "-n" {
+			answer, err := AskQuestion(message, config.GPT_BOT_TOKEN, clientTranslate)
+			if err != nil {
+				SaveError(chat_id, message, err.Error(), client)
+			}
+			UpdateFirebase("users", id, "tokensUsed", tokens + answer.Tokens, client)
+			return answer.Message, nil
 		} else {
 			msg, err := fromRussian(clientTranslate, message)
 			if err != nil {

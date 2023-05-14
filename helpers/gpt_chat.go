@@ -95,6 +95,14 @@ func AskQuestion(question string, gpt_token string, clientTranslate *translate.C
 		log.Println(err)
 	}
 	choice := response.Choices[0]
+	if question[0:2]=="-n" {
+		answer := Answer{
+			Message: choice.Text,
+			Tokens: response.Usage.TotalTokens,
+		}
+	
+		return answer, nil
+	}
 
 	msg, err := toRussian(clientTranslate, choice.Text)
 	if err != nil {
